@@ -42,8 +42,17 @@ func main() {
 		port = "5004"
 	}
 
-	log.Printf("Starting server on :%s", port)
-	if err := r.Run(":" + port); err != nil {
-		log.Fatalf("Server failed: %v", err)
+	certPath := os.Getenv("SSL_CERT_PATH")
+	keyPath := os.Getenv("SSL_KEY_PATH")
+	if certPath != "" && keyPath != "" {
+		log.Printf("Starting HTTPS server on :%s", port)
+		if err := r.RunTLS(":"+port, certPath, keyPath); err != nil {
+			log.Fatalf("HTTPS server failed: %v", err)
+		}
+	} else {
+		log.Printf("Starting HTTP server on :%s", port)
+		if err := r.Run(":" + port); err != nil {
+			log.Fatalf("HTTP server failed: %v", err)
+		}
 	}
 }
