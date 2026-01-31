@@ -8,9 +8,12 @@ import (
 	"github.com/Sathimantha/site-chat-server/internal/db"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	// Load .env file if present
+	_ = godotenv.Load()
 	// Initialize SQLite database
 	if err := db.Init(); err != nil {
 		log.Fatalf("Failed to initialize database: %v", err)
@@ -26,7 +29,21 @@ func main() {
 
 	// Set up Gin router
 	r := gin.Default()
-	r.Use(cors.Default())
+	corsConfig := cors.Config{
+		AllowOrigins: []string{
+			"https://*.peaceandhumanity.org",
+			"https://peaceandhumanity.org",
+			"https://preview.peaceandhumanity.org",
+		},
+		AllowMethods:     []string{"GET", "POST", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+		AllowCredentials: true,
+	}
+	r.Use(cors.New(corsConfig))
+
+	// Security best practices
+	gin.SetMode(gin.ReleaseMode) // Use release mode in production
+	r.SetTrustedProxies(nil)     // Do not trust all proxies
 
 	// Health check
 	r.GET("/", func(c *gin.Context) {
@@ -39,7 +56,7 @@ func main() {
 	// Start server
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "5004"
+		port = "9999"
 	}
 
 	certPath := os.Getenv("SSL_CERT_PATH")

@@ -13,7 +13,7 @@ import (
 var systemPrompt string
 
 func init() {
-	data, err := os.ReadFile("system_prompt.txt")
+	data, err := os.ReadFile("system_prompt.md")
 	if err != nil {
 		systemPrompt = "[System prompt could not be loaded]"
 	} else {
