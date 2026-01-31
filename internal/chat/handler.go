@@ -73,7 +73,7 @@ func handleChat(apiKey string) gin.HandlerFunc {
 		}
 		defer client.Close()
 
-		model := client.GenerativeModel("gemini-1.5-flash")
+		model := client.GenerativeModel("gemini-flash-latest")
 
 		// Generation settings
 		model.SetTemperature(0.9)
