@@ -125,7 +125,7 @@ func handleChat(apiKey string) gin.HandlerFunc {
 
 		reply := strings.TrimSpace(replyBuilder.String())
 		if reply == "" {
-			reply = "I don't have a response right now. Please try again."
+			reply = "I don't have a response right now. Please try to contact our office: https://wa.me/94771414496"
 		}
 
 		// Save messages (no token counts)
