@@ -17,10 +17,15 @@ import (
 var systemPrompt string
 
 func init() {
-	data, err := os.ReadFile("system_prompt.md")
+	systemPromptPath := os.Getenv("SYSTEM_PROMPT_PATH")
+	if systemPromptPath == "" {
+		systemPromptPath = "system_prompt.md"
+		log.Println("Warning: Using default system prompt path")
+	}
+	data, err := os.ReadFile(systemPromptPath)
 	if err != nil {
 		systemPrompt = "[System prompt could not be loaded]"
-		log.Printf("Failed to load system_prompt.md: %v", err)
+		log.Printf("Failed to load system prompt from %s: %v", systemPromptPath, err)
 	} else {
 		systemPrompt = string(data)
 	}

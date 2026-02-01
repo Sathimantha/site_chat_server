@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"strings"
 
 	"github.com/Sathimantha/site-chat-server/internal/chat"
 	"github.com/Sathimantha/site-chat-server/internal/db"
@@ -27,14 +28,25 @@ func main() {
 		log.Println("Warning: Using fallback API key (not secure for production)")
 	}
 
+	// Get allowed origins from env
+	allowedOriginsStr := os.Getenv("ALLOWED_ORIGINS")
+	var allowedOrigins []string
+	if allowedOriginsStr != "" {
+		for _, origin := range strings.Split(allowedOriginsStr, ",") {
+			trimmed := strings.TrimSpace(origin)
+			if trimmed != "" {
+				allowedOrigins = append(allowedOrigins, trimmed)
+			}
+		}
+	}
+	if len(allowedOrigins) == 0 {
+		log.Println("Warning: No allowed origins specified in ALLOWED_ORIGINS env var. CORS will not allow any origins.")
+	}
+
 	// Set up Gin router
 	r := gin.Default()
 	corsConfig := cors.Config{
-		AllowOrigins: []string{
-			"https://*.peaceandhumanity.org",
-			"https://peaceandhumanity.org",
-			"https://preview.peaceandhumanity.org",
-		},
+		AllowOrigins:     allowedOrigins,
 		AllowMethods:     []string{"GET", "POST", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
 		AllowCredentials: true,
