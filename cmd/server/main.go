@@ -59,7 +59,7 @@ func main() {
 
 	// Health check
 	r.GET("/", func(c *gin.Context) {
-		c.String(200, "Rio Chat Server is Online (Go version)")
+		c.String(200, "Sam Chat Server is Online (Go version)")
 	})
 
 	// Register chat API routes

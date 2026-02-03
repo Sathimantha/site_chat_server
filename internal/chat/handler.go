@@ -35,6 +35,9 @@ func RegisterRoutes(r *gin.Engine, apiKey string) {
 	r.POST("/api/chat", handleChat(apiKey))
 	r.GET("/api/history", handleHistory)
 	r.GET("/api/stats", handleStats)
+	r.GET("/robots.txt", func(c *gin.Context) {
+		c.String(http.StatusOK, "User-agent: *\nDisallow: /")
+	})
 }
 
 func handleChat(apiKey string) gin.HandlerFunc {
